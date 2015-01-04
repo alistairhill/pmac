@@ -19,13 +19,29 @@ def open_file(file_name)
 end
 
 def add_values_for_tabs
-  @array.each do |row|
-    row.each do |string|
+  @array.map! do |row|
+    row.map do |string|
       string.gsub!(/\s{7,}/, " x ")
+      # string.gsub!(/[A-Z]\s[x]/, " ")
     end
+    row.join(" ").split(" ")
+  end
+end
+
+def make_rows_uniform
+  @array.each do |row|
+    p row.length
+  end
+end
+
+def delete_unneeded_rows
+  @array.delete_if do |row|
+    row[0] == "<pre>" || row[0] == "</pre>" || row[0] == nil || row[0] == "MMU"
   end
   print @array
 end
 
 open_file("data/w_data.dat")
 add_values_for_tabs
+delete_unneeded_rows
+make_rows_uniform
