@@ -20,7 +20,7 @@ end
 def make_rows_uniform
   @array.map! do |row|
     row.map do |string|
-      string.gsub!(/\s{8,}/, " #{0} ")
+      string.gsub!(/\s{8,}/, " #{0} ") #replace >=8 whitespaces w/ 0
       string.gsub!(/1HrP/, "") #delete header w/ no data
       string.gsub!(/\*/, "") #delete asterisk
     end
@@ -36,10 +36,16 @@ end
 
 def make_columns
   @columns = @array.transpose
-  p @columns
+end
+
+def min_temp_spread(col_a, col_b)
+  @columns[col_a-1].zip(@columns[col_b-1]).each do |mxt, mnt|
+    @compare << (mxt.to_i - mnt.to_i)
+  end
 end
 
 open_file("data/w_data.dat")
 make_rows_uniform
 delete_unneeded_rows
 make_columns
+min_temp_spread(2,3)
