@@ -29,8 +29,8 @@ class SoccerData
   def cleanse_data
     @soccer_data.map! do |row|
       row.map do |string|
-        string.gsub!(/-/, "")
-        string.gsub!(/\d{1,}\./, "")
+        string.gsub!(/-/, "") #remove "-"
+        string.gsub!(/\d{1,}\./, "") #remove team numbers
       end
       row.join(" ").split(" ")
     end
@@ -49,6 +49,7 @@ class SoccerData
   end
 
   def col_calculation(col_a, col_b, operator)
+    #zip two columns together to execute calculation
     @col_data[col_a-1].zip(@col_data[col_b-1]).each do |col_1, col_2|
       @sum_array << (col_1.to_i.send(operator, col_2.to_i))
     end
@@ -61,7 +62,9 @@ class SoccerData
   end
 
   def col_comparison(res_col_num)
+    #zip chosen result column with sum of col_calculation column
     @col_data[res_col_num].zip(@sum_array).each do |result_col, sum|
+      #add result col & sum col to hash for returning the corresponding lowest difference
       @col_com_hash[result_col] = sum if result_col != @col_data[res_col_num].first
     end
     return @col_com_hash.min_by {|key, value| value.abs}.first
