@@ -3,14 +3,10 @@
 # 2. parse over file
 # 3. put each line into an array
 # 4. delete unneeded rows
-# 5. make rows uniform
+# 5. cleanse data
 # 6. assign rows to columns array
-# 7. compare for column with against column for smallest difference
-# 8. return team name associated with above condition
-
-@array = []
-@compare = []
-@hash = Hash.new(0)
+# 7. compare two columns for smallest difference
+# 8. return corresponding row string associated with above condition
 
 class SoccerData
   def initialize
@@ -39,7 +35,7 @@ class SoccerData
 
   def delete_unneeded_rows
     @soccer_data.delete_if do |row|
-      row[0] == "<pre>" || row[0] == "</pre>" || row[0] == nil
+      row.first == "<pre>" || row.first == "</pre>" || row.first == nil
     end
     return make_columns
   end
@@ -49,7 +45,7 @@ class SoccerData
   end
 
   def col_calculation(col_a, col_b, operator)
-    #zip two columns together to execute calculation
+    #zip two columns together for calculation
     @col_data[col_a-1].zip(@col_data[col_b-1]).each do |col_1, col_2|
       @sum_array << (col_1.to_i.send(operator, col_2.to_i))
     end
@@ -57,11 +53,11 @@ class SoccerData
 
   def choose_result_col(col_name_string)
     @col_data.each_with_index do |col, index|
-      return col_comparison(index) if col.first == col_name_string
+      return lowest_result(index) if col.first == col_name_string
     end
   end
 
-  def col_comparison(res_col_num)
+  def lowest_result(res_col_num)
     #zip chosen result column with sum of col_calculation column
     @col_data[res_col_num].zip(@sum_array).each do |result_col, sum|
       #add result col & sum col to hash for returning the corresponding lowest difference
@@ -73,5 +69,5 @@ end
 
 smallest_for_against = SoccerData.new
 smallest_for_against.open_file("data/soccer.dat")
-smallest_for_against.col_calculation(6,7, "-")
+smallest_for_against.col_calculation(6,7, "-") #col nums & operator
 smallest_for_against.choose_result_col("Team")

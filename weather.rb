@@ -3,10 +3,10 @@
 # 2. parse over file
 # 3. put each line into an array
 # 4. delete unneeded rows
-# 5. make rows uniform
+# 5. cleanse data
 # 6. assign rows to columns array
-# 7. compare column 2 to column 3 for smallest difference
-# 8. return column number associated with above condition
+# 7. compare two columns for smallest difference
+# 8. return corresponding row string associated with above condition
 
 class WeatherData
   def initialize
@@ -54,11 +54,11 @@ class WeatherData
 
   def choose_result_col(col_name_string)
     @col_data.each_with_index do |col, index|
-      return col_comparison(index) if col.first == col_name_string
+      return lowest_result(index) if col.first == col_name_string
     end
   end
 
-  def col_comparison(res_col_num)
+  def lowest_result(res_col_num)
     #zip chosen result column with sum of col_calculation column
     @col_data[res_col_num].zip(@sum_array).each do |result_col, sum|
       #add result col & sum col to hash for returning the corresponding lowest difference
@@ -70,5 +70,5 @@ end
 
 temperature_spread = WeatherData.new
 temperature_spread.open_file("data/w_data.dat")
-temperature_spread.col_calculation(2,3, "-")
+temperature_spread.col_calculation(2,3, "-") #col nums & operator
 temperature_spread.choose_result_col("Dy")
