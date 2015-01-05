@@ -5,29 +5,32 @@
 # 4. delete unneeded rows
 # 5. make rows uniform
 # 6. assign rows to columns array
-# 7. compare column 2 to column 3 for smallest difference
-# 8. return column number associated with above condition
+# 7. compare for column with against column for smallest difference
+# 8. return team name associated with above condition
 
-class WeatherData
+@array = []
+@compare = []
+@hash = Hash.new(0)
+
+class SoccerData
   def initialize
-    @weather_data = []
+    @soccer_data = []
     @sum_array = []
     @col_com_hash = Hash.new(0)
   end
 
   def open_file(file_name)
     File.open(file_name).each do |line|
-      @weather_data << line.split("\t")
+      @soccer_data << line.split("\t")
     end
     return cleanse_data
   end
 
   def cleanse_data
-    @weather_data.map! do |row|
+    @soccer_data.map! do |row|
       row.map do |string|
-        string.gsub!(/\s{8,}/, " #{0} ") #replace >=8 whitespaces w/ 0
-        string.gsub!(/1HrP/, "") #delete header w/ no data
-        string.gsub!(/\*/, "") #delete asterisk
+        string.gsub!(/-/, "")
+        string.gsub!(/\d{1,}\./, "")
       end
       row.join(" ").split(" ")
     end
@@ -35,14 +38,14 @@ class WeatherData
   end
 
   def delete_unneeded_rows
-    @weather_data.delete_if do |row|
-      row.first == "<pre>" || row.first == "</pre>" || row.first == nil || row.first == "MMU" || row.first == "mo"
+    @soccer_data.delete_if do |row|
+      row[0] == "<pre>" || row[0] == "</pre>" || row[0] == nil
     end
     return make_columns
   end
 
   def make_columns
-    @col_data = @weather_data.transpose
+    @col_data = @soccer_data.transpose
   end
 
   def col_calculation(col_a, col_b, operator)
@@ -65,7 +68,7 @@ class WeatherData
   end
 end
 
-temperature_spread = WeatherData.new
-temperature_spread.open_file("data/w_data.dat")
-temperature_spread.col_calculation(2,3, "-")
-temperature_spread.choose_result_col("Dy")
+smallest_for_against = SoccerData.new
+smallest_for_against.open_file("data/soccer.dat")
+smallest_for_against.col_calculation(6,7, "-")
+smallest_for_against.choose_result_col("Team")
