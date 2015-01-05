@@ -44,8 +44,17 @@ def min_temp_spread(col_a, col_b)
   end
 end
 
+def col_comparison
+  #using days column to zip the sum of mxt minus mnt
+  @columns[0].zip(@compare).each do |day, sum|
+    @hash[day] = sum if day != "Dy" #don't include header
+  end
+  return @hash.sort_by {|key, value| value}.first[0]
+end
+
 open_file("data/w_data.dat")
 make_rows_uniform
 delete_unneeded_rows
 make_columns
 min_temp_spread(2,3)
+p col_comparison
